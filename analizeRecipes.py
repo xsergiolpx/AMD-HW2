@@ -12,11 +12,11 @@ links = loadFromFile("retrieveData/recipes")
 analizedLinks = loadFromFile(visitedRecipes)
 
 #counter
-counter = len(visitedRecipes)
+counter = len(analizedLinks)
 
 for link in links:
-    counter += 1
     if link not in analizedLinks:
+        counter += 1
         print("###", counter , "of", len(links), "#### Fetching --> " ,link)
         cnt = requests.get(link)
         soup = BeautifulSoup(cnt.text, "lxml")
