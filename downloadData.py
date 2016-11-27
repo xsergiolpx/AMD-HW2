@@ -65,8 +65,7 @@ for link in ingredientsURL:
         # Save the recipes links to a file
         saveToFile(sorted(recipes), "retrieveData/recipes")
         saveToFile(sorted(visitedLinks), "retrieveData/visitedLinks")
-        print(searchMore)
-        saveToFile(searchMore, "retrieveData/visitedLinks")
+        saveToFile(set(searchMore), "retrieveData/searchMore")
         #time.sleep(0.5)
 
 # Now we have to search in urls like /food/recipes/search?keywords=rice
@@ -105,6 +104,8 @@ for search in searchMore:
         saveToFile(sorted(visitedLinks), "retrieveData/visitedLinks")
         if len(recipes) >= totalRecipes:
             break
+    if len(recipes) >= totalRecipes:
+        break
 
 print("\n\n ------------- Finish! Total recipes:", len(recipes))
 
