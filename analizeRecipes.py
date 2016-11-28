@@ -52,11 +52,17 @@ for link in links:
 
         #prep_time
         #header.append(information.find_all(itemprop="prepTime")[0].contents[0])
-        header.append(information.find_all(class_="recipe-metadata__prep-time")[0].contents[0])
+        try:
+            header.append(information.find_all(class_="recipe-metadata__prep-time")[0].contents[0])
+        except IndexError:
+            header.append("NaN")
 
         #cooking_time
         #header.append(information.find_all(itemprop="cookTime")[0].contents[0])
-        header.append(information.find_all(class_="recipe-metadata__cook-time")[0].contents[0])
+        try:
+            header.append(information.find_all(class_="recipe-metadata__cook-time")[0].contents[0])
+        except IndexError:
+            header.append("NaN")
 
         #serves
         try:
@@ -76,11 +82,14 @@ for link in links:
             header.append("http://www.ballesteros.me/amd/unknown.png")
         #method
         #contains multiple paragraphs, gotta add them all and puth them together
-        methods = information.find_all(itemprop="recipeInstructions")
-        methodText = ""
-        for method in methods:
-            methodText += method.contents[1].contents[0] + " "
-        header.append(methodText)
+        try:
+            methods = information.find_all(itemprop="recipeInstructions")
+            methodText = ""
+            for method in methods:
+                methodText += method.contents[1].contents[0] + " "
+            header.append(methodText)
+        except IndexError:
+            header.append("NaN")
 
         #ingredients
         #some ingredients have information in link form and other information in normal form
