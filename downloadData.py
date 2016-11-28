@@ -4,17 +4,16 @@ from bs4 import BeautifulSoup
 from manageFiles import saveToFile
 from manageFiles import loadFromFile
 
+# How many recipes to lookup
 totalRecipes = 11232
 
-# List of all the URLs of the ingredients. There are no ingredients which begin by x
+# List of all the URLs of the places to find the ingredients. There are no ingredients which begin by x
 urls = []
 for letter in ascii_lowercase:
-    #change when finish
     if letter is not "x":
-    #if letter is "a":
         urls.append("http://www.bbc.co.uk/food/ingredients/by/letter/" + letter)
 
-
+#List of all the URL of the ingredients
 ingredientsURL = []
 
 # Collect all ingredients of each webpage of urls
@@ -25,28 +24,27 @@ for page in urls:
     print("Getting the ingredients of", page)
     for i in tmp[:]:
         if "Related " not in str(i):
-            #ingredients.append(str(i).split("        ")[3])
-            ingredientsURL.append("http://www.bbc.co.uk" + str(i).split("\"")[1]) #alternative way
+            ingredientsURL.append("http://www.bbc.co.uk" + str(i).split("\"")[1])
 del tmp
 
 # Create dict, keys are links of the ingredients, each value is a list that contains the links of of the recipes that you can make using such ingredient
 recipes = set()
 
-# Load visited links from previous ran
+# Load visited links from previous runs if any
 visitedLinks = loadFromFile("retrieveData/visitedLinks")
-#visitedLinks = [] #descomentar para acabar
-#Load precious recipes
+# Load the links of the recipes found in previous runs if any
 recipes = set(loadFromFile("retrieveData/recipes"))
-#Further search recipes here
+# Store the links of the type /search? here because the process to get recipe links here is different
 searchMore = loadFromFile("retrieveData/searchMore")
-
-#Investigate each ingredient
-#ingredientsURL = ["http://www.bbc.co.uk/food/almond"]
+# how many ingredients URL have we visited so far
 counter = len(visitedLinks)
+
+#Investigate each ingredient URL
 for link in ingredientsURL:
+    # avoid looking twice in the same link
     if link not in visitedLinks:
         counter += 1
-        print("######", counter, "/", len(ingredientsURL) ," ingredients explored ### Total recipes",  len(recipes)  ,"#### Fetching ---> ", link)
+        print("###", counter, "/", len(ingredientsURL) ,"explored ingredients ### Total recipes",  len(recipes)  ,"#### Fetching ---> ", link)
         visitedLinks.append(link)
         cnt = requests.get(link)
         soup = BeautifulSoup(cnt.text, "lxml")
@@ -57,9 +55,9 @@ for link in ingredientsURL:
         for i in tmp[:]:
             if "all recipes using " not in str(i) and "search" not in str(i):
                 lis.append("http://www.bbc.co.uk" + i["href"])
+            #some ingredients links that lead to /search? so we store them here to analize later
             if "/food/recipes/search" in str(i) and "[]" not in str(i):
                 searchMore.append("http://www.bbc.co.uk" + i["href"].replace(" ", "%20"))
-                print("Gotta investigate this -->",searchMore[-1])
         recipes = recipes.union(set(lis))
 
         # Save the recipes links to a file

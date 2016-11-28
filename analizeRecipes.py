@@ -5,19 +5,25 @@ from manageFiles import loadFromFile
 from manageFiles import apendToFile
 import time
 
-
+#filename to write the data
 file="data"
+
+#filename to save the visited recipes to save on the fly
 visitedRecipes = "retrieveData/visitedRecipes"
+
+#list of links of the recipes to examine
 links = loadFromFile("retrieveData/recipes")
 
+#load list of already analized links from previous runs if any
 analizedLinks = loadFromFile(visitedRecipes)
 
-#counter
+#counter of the analized recipes
 counter = len(analizedLinks)
 
 for link in links:
     if link not in analizedLinks:
         while True:
+            #try to get the connection, if fails, wait 3 seconds and retry
             try:
                 counter += 1
                 print("###", counter , "of", len(links), "#### Fetching --> " ,link)
@@ -30,7 +36,7 @@ for link in links:
                 #Add all the information
                 '''
                 header = ["recipe_name", "author", "programme", "prep_time", "cooking_time", "serves", "pic_id",
-                "method", "ingredients", "vegetarian" , "calories", "protein", "carbs", "total_fat",
+                "method", "ingredients", "vegetarian" , "calories", "protein", "carbs", "sugars", "total_fat",
                 "saturated_fat", "fiber", "salt", "link"])
                 '''
                 header = []
@@ -134,12 +140,11 @@ for link in links:
                     if "\t" in header[field] or "\n" in header[field] or "\r" in header[field]:
                         header[field] = header[field].replace("\n", " ").replace("\t", " ").replace("\r", " ")
 
-                #print(header)
-
                 # Append current header to the file
                 saveToTSF(header, file)
                 # Append the visited link ot a file
                 apendToFile(link, visitedRecipes)
             except IndexError:
+                # no connection!! retry in 3 seconds
                 time.sleep(3)
             break
