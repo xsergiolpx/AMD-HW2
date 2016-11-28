@@ -1,8 +1,9 @@
 import os
 def loadFromFile(filename):
     '''
-    :param filename:
-    :return:
+    Loads filename. If it does not exist, it is created.
+    :param filename: filename to load without extension
+    :return: list in which each element has one line of filename.txt
     '''
     if os.path.exists(filename + ".txt"):
         with open(filename + ".txt", "r+") as f:
@@ -18,14 +19,20 @@ def loadFromFile(filename):
 
 def saveToFile(iter, filename):
     '''
-    :param iterable: save this to the file
-    :param filename:
-    :return:
+    :param iterable: save this iterable to the file. Each element in a new line
+    :param filename: filename
+    :return: nothing
     '''
     with open(filename + '.txt', 'w') as f:
         f.write('\n'.join(iter))
 
 def apendToFile(s, filename):
+    '''
+    appends to a new line the string s to the file filename.txt
+    :param s: this is a string
+    :param filename: filename of the file
+    :return: nothing
+    '''
     with open(filename + ".txt", "a") as f:
         f.write(s)
         f.write("\n")
@@ -33,9 +40,12 @@ def apendToFile(s, filename):
 
 def saveToTSF(header, filename):
     '''
-    :param header: save this to the file
-    :param filename:
-    :return:
+    Apends the list "header" to the file filename.txt.
+    This is a tsv, so each element of the list is
+    separated by a tab in the file
+    :param header: list of elements
+    :param filename: name of the file
+    :return: nothing
     '''
 
     with open(filename + ".tsv", "a") as f:
