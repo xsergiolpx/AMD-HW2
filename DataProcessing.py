@@ -3,6 +3,7 @@ import nltk
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
 import string
+import re
 
 
 def tokenize(text):
@@ -17,7 +18,7 @@ def tokenize(text):
     if pd.isnull(text) or isinstance(text, bool):
         return text
 
-    stopset = set(stopwords.words('english')).union(set(string.punctuation))
+    stopset = set(stopwords.words('english'))
     ps = PorterStemmer()
 
     # normalize the text
@@ -26,11 +27,14 @@ def tokenize(text):
     # creates the tokens
     text = nltk.word_tokenize(text)
 
+    # excludes tokens which contain numbers and punctuations
+    text = [t for t in text if bool(re.search(r'\d', t)) == False and t not in string.punctuation]
+
     # removes the stopwords and punctuations
     text = [ps.stem(t) for t in text]
 
     # stems the content
-    text = [w for w in text if not w in stopset]
+    text = [t for t in text if not t in stopset]
 
     #remove the duplicates before returning the tokens
     return list(set(text))
