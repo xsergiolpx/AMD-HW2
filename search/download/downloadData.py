@@ -65,9 +65,9 @@ for link in ingredientsURL:
         recipes = recipes.union(set(lis))
 
         # Save the recipes links to a file
-        saveToFile(sorted(recipes), "retrieveData/recipes")
-        saveToFile(sorted(visitedLinks), "retrieveData/visitedLinks")
-        saveToFile(set(searchMore), "retrieveData/searchMore")
+        saveToFile(sorted(recipes), "data/retrieveData/recipes")
+        saveToFile(sorted(visitedLinks), "data/retrieveData/visitedLinks")
+        saveToFile(set(searchMore), "data/retrieveData/searchMore")
         # time.sleep(0.5)
 
 # Now we have to search in urls like /food/recipes/search?keywords=rice
@@ -98,12 +98,12 @@ for search in searchMore:
                 lis.append("http://www.bbc.co.uk" + i.find_all("a")[0]["href"])
                 recipes = recipes.union(set(lis))
             print(len(recipes), "of", totalRecipes, "### Retrieving page -->", counterPage, "of", maxPage, searchI)
-            saveToFile(sorted(recipes), "retrieveData/recipes")
+            saveToFile(sorted(recipes), "data/retrieveData/recipes")
             if len(recipes) >= totalRecipes:
                 visitedLinks.append(search)
                 break
         visitedLinks.append(search)
-        saveToFile(sorted(visitedLinks), "retrieveData/visitedLinks")
+        saveToFile(sorted(visitedLinks), "data/retrieveData/visitedLinks")
         if len(recipes) >= totalRecipes:
             break
     if len(recipes) >= totalRecipes:
