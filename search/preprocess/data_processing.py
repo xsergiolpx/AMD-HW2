@@ -4,7 +4,9 @@ from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
 import string
 import re
+import sys
 
+# TODO: Fix import
 
 def tokenize(text):
     '''
@@ -24,6 +26,9 @@ def tokenize(text):
     # normalize the text
     text = text.lower()
 
+    # substitute a / for a space, in order that they will be split in two tokens
+    text = re.sub(r"/", ' ', text)
+
     # creates the tokens
     text = nltk.word_tokenize(text)
 
@@ -36,11 +41,14 @@ def tokenize(text):
     # stems the content
     text = [t for t in text if not t in stopset]
 
-    #remove the duplicates before returning the tokens
+    # remove the strange character ' appearing before some words
+    text = [re.sub('[\'\"]', '', t) for t in text if not t in stopset]
+
+    # remove the duplicates before returning the tokens
     return list(set(text))
 
 
-def tokenize_CSV(filename='data.tsv',
+def tokenize_CSV(filename='data/data.tsv',
                  columns=["recipe_name", "author", "programme", "method", "ingredients", "vegetarian"]):
     '''
     It receives a CSV file in FILENAME containing the recipes in each row and tab-separated. It applies the
@@ -56,7 +64,13 @@ def tokenize_CSV(filename='data.tsv',
     df_recipes = pd.read_csv(filename, delimiter="\t", names=names, usecols=columns)
 
     # Iterates over each row of the recipes dataframe, getting the row and the row number (index)
+
+    times = 0
     for index, row in df_recipes.iterrows():
+        if times % 100 == 0:
+            print("[preprocessing] %0.2f%s documents processed"%(100*times/12000,'%'))
+            sys.stdout.flush()
+        times += 1
         # Reads each column name in COLUMNS
         for column in columns:
             # Accesses each cell by the row number and the column name and apply the function tokenize on the cell,
@@ -83,6 +97,4 @@ def generate_json(df_recipes):
     :param df_recipes: Pandas dataframe with one recipe in each row
     :return:
     '''
-    df_recipes.to_json("./tokens.json", orient="index", force_ascii=False)
-
-generate_json(tokenize_CSV())
+    df_recipes.to_json("data/tokens.json", orient="index", force_ascii=False)

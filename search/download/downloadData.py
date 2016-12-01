@@ -13,7 +13,7 @@ for letter in ascii_lowercase:
     if letter is not "x":
         urls.append("http://www.bbc.co.uk/food/ingredients/by/letter/" + letter)
 
-#List of all the URL of the ingredients
+# List of all the URL of the ingredients
 ingredientsURL = []
 
 # Collect all ingredients of each webpage of urls
@@ -39,7 +39,7 @@ searchMore = loadFromFile("retrieveData/searchMore")
 # how many ingredients URL have we visited so far
 counter = len(visitedLinks)
 
-#Investigate each ingredient URL
+# Investigate each ingredient URL
 for link in ingredientsURL:
     # avoid looking twice in the same link
     if link not in visitedLinks:
