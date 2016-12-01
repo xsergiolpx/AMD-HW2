@@ -1,6 +1,8 @@
-Hello world!
+# Search Engine
 
-# Functions description
+[![Python](https://img.shields.io/badge/python-3.5.2-brightgreen.svg)](https://docs.python.org/3.5/whatsnew/changelog.html#python-3-5-2)
+
+## Functions description
 
 downloadData.py: gets all the link recipes of the website. First it looks in /food/ingredients/ for all the recipes that are linked from a ingredient page. Then it looks up the recipes that aren't there but are on /search?keyword=. Stores the links in the files ./retrieveData/recipes.txt. Also in order to continue searching for links, if the conection is interrupted, all the visited links are stored in ./retrieveData/visitedLinks.txt and ./retrieveData/searchMore.txt (the first are the /food/ingredients/ links and the second the /search?keyword=). The links are saved on the fly as the machine retrieves the information.
 
