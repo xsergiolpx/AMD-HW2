@@ -1,18 +1,22 @@
+import time
+
 import requests
 from bs4 import BeautifulSoup
-from manageFiles import saveToTSF
-from manageFiles import loadFromFile
-from manageFiles import apendToFile
-import time
+
+from search.download.manageFiles import apendToFile
+from search.download.manageFiles import loadFromFile
+from search.download.manageFiles import saveToTSF
+
+# TODO: This should be a script
 
 # filename to write the data
 file="data"
 
 # filename to save the visited recipes to save on the fly
-visitedRecipes = "retrieveData/visitedRecipes"
+visitedRecipes = "data/retrieveData/visitedRecipes"
 
 # list of links of the recipes to examine
-links = loadFromFile("retrieveData/recipes")
+links = loadFromFile("data/retrieveData/recipes")
 
 # load list of already analized links from previous runs if any
 analizedLinks = loadFromFile(visitedRecipes)

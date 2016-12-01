@@ -1,8 +1,12 @@
-import requests
 from string import ascii_lowercase
+
+import requests
 from bs4 import BeautifulSoup
-from manageFiles import saveToFile
-from manageFiles import loadFromFile
+
+from search.download.manageFiles import loadFromFile
+from search.download.manageFiles import saveToFile
+
+# TODO: This should be a script
 
 # How many recipes to lookup
 totalRecipes = 11232
@@ -31,11 +35,11 @@ del tmp
 recipes = set()
 
 # Load visited links from previous runs if any
-visitedLinks = loadFromFile("retrieveData/visitedLinks")
+visitedLinks = loadFromFile("data/retrieveData/visitedLinks")
 # Load the links of the recipes found in previous runs if any
-recipes = set(loadFromFile("retrieveData/recipes"))
+recipes = set(loadFromFile("data/retrieveData/recipes"))
 # Store the links of the type /search? here because the process to get recipe links here is different
-searchMore = loadFromFile("retrieveData/searchMore")
+searchMore = loadFromFile("data/retrieveData/searchMore")
 # how many ingredients URL have we visited so far
 counter = len(visitedLinks)
 

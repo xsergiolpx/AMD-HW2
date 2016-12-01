@@ -1,5 +1,6 @@
 import os
 
+# TODO: PEP names
 
 def loadFromFile(filename):
     """
