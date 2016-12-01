@@ -1,7 +1,8 @@
 from search.indexing.inverted_index import InvertedIndex
 import argparse
 
-# TODO: Add options to decide what to do
+# TODO: Find out how to pass a vector to argparse
+
 
 def get_args():
     parser = argparse.ArgumentParser()
@@ -20,6 +21,7 @@ def get_args():
     arguments = parser.parse_args()
     
     return arguments, parser
+
 
 def main():
     args, parser = get_args()
