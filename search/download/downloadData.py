@@ -59,7 +59,7 @@ for link in ingredientsURL:
         for i in tmp[:]:
             if "all recipes using " not in str(i) and "search" not in str(i):
                 lis.append("http://www.bbc.co.uk" + i["href"])
-            #some ingredients links that lead to /search? so we store them here to analize later
+            # some ingredients links that lead to /search? so we store them here to analize later
             if "/food/recipes/search" in str(i) and "[]" not in str(i):
                 searchMore.append("http://www.bbc.co.uk" + i["href"].replace(" ", "%20"))
         recipes = recipes.union(set(lis))
@@ -68,7 +68,7 @@ for link in ingredientsURL:
         saveToFile(sorted(recipes), "retrieveData/recipes")
         saveToFile(sorted(visitedLinks), "retrieveData/visitedLinks")
         saveToFile(set(searchMore), "retrieveData/searchMore")
-        #time.sleep(0.5)
+        # time.sleep(0.5)
 
 # Now we have to search in urls like /food/recipes/search?keywords=rice
 for search in searchMore:
@@ -78,21 +78,21 @@ for search in searchMore:
         cnt = requests.get(search)
         soup = BeautifulSoup(cnt.text, "lxml")
 
-        #Try to get maximum number of webpages
+        # Try to get maximum number of webpages
         try:
             maxPage = soup.find_all(class_="see-all-search")[-2].contents[0]
             searchPages = [search[:41] + "page=" + str(i) + "&" + search[41:] for i in range(1, int(maxPage) + 1)]
         except IndexError:
             searchPages = [search]
 
-        #investigate each page of maxPage
+        # investigate each page of maxPage
         for searchI in searchPages:
             counterPage += 1
             cnt = requests.get(searchI)
             soup = BeautifulSoup(cnt.text, "lxml")
             elementsLeft = soup.find_all(class_="left")
 
-            #Add here all the found recipes in each page
+            # Add here all the found recipes in each page
             lis = []
             for i in elementsLeft:
                 lis.append("http://www.bbc.co.uk" + i.find_all("a")[0]["href"])
