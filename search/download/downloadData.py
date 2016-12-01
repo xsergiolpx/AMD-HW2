@@ -31,7 +31,8 @@ for page in urls:
             ingredientsURL.append("http://www.bbc.co.uk" + str(i).split("\"")[1])
 del tmp
 
-# Create dict, keys are links of the ingredients, each value is a list that contains the links of of the recipes that you can make using such ingredient
+# Create dict, keys are links of the ingredients, each value is a list that contains the links of of the recipes that
+# you can make using such ingredient
 recipes = set()
 
 # Load visited links from previous runs if any
