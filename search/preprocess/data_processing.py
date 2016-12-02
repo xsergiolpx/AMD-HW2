@@ -45,7 +45,7 @@ def tokenize(text):
     text = [t for t in text if not t in stopset]
 
     # remove the strange character ' appearing before some words
-    text = [re.sub('[\'\"]', '', t) for t in text if not t in stopset]
+    text = [re.sub('[\'\"]', '', t) for t in text]
 
     # remove the duplicates before returning the tokens
     return list(set(text))
