@@ -29,6 +29,10 @@ def tokenize(text):
     # substitute a / for a space, in order that they will be split in two tokens
     text = re.sub(r"/", ' ', text)
 
+    # Delete fractions
+    fractions = ['̶', '½', '¾', '¼', '⅓', '⅙', '⅛', '⅔', '⅝','⅜','—','–','‘','”','…','.','`','’']
+    text = re.sub(('[' + ','.join(map(lambda x: str(x), fractions)) + ']'), '', text)
+
     # creates the tokens
     text = word_tokenize(text)
 
