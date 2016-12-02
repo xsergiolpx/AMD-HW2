@@ -7,7 +7,6 @@ import re
 import sys
 
 
-
 def tokenize(text):
     """
     Receives a text, which could be a single word or a sentence, and applies the natural language
