@@ -34,16 +34,14 @@ class InvertedIndex(object):
                         self.tokens.append((i, int(doc)))
                 except TypeError:
                     continue
+        # (i, int(doc)) could be in 2 types
+        self.tokens = list(set(self.tokens))
 
     def sort_tokens(self):
         self.tokens.sort(key=lambda x: (x[0], x[1]))
 
     def create_dictionary(self):
-        # TODO: Decide what to do here.
-        if len(self.postings) > 0:
-            print("hola")
-        else:
-            print(self.postings.keys())
+        self.dictionary = Counter(k for k,_ in self.tokens)
 
     def create_postings(self):
         for k, v in self.tokens:
@@ -57,3 +55,6 @@ class InvertedIndex(object):
 
     def get_postings(self):
         return self.postings
+
+    def get_dictionary(self):
+        return self.dictionary
