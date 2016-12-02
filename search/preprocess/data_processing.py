@@ -30,7 +30,7 @@ def tokenize(text):
     text = re.sub(r"/", ' ', text)
 
     # Delete fractions
-    fractions = ['̶', '½', '¾', '¼', '⅓', '⅙', '⅛', '⅔', '⅝','⅜','—','–','‘','”','…','.','`','’']
+    fractions = ['̶', '½', '¾', '¼', '⅓', '⅙', '⅛', '⅔', '⅝','⅜','—','–','‘','”','…','.','`','’', '“']
     text = re.sub(('[' + ','.join(map(lambda x: str(x), fractions)) + ']'), '', text)
 
     # creates the tokens
