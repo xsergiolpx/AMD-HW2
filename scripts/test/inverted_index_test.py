@@ -2,7 +2,7 @@ from search.indexing.inverted_index import InvertedIndex
 from search.preprocess.data_processing import generate_json, tokenize_CSV
 import argparse
 
-# TODO: Find out how to pass a vector to argparse
+# TODO: Find out how to pass a vector to argparse for types
 
 
 def get_args():
@@ -11,8 +11,12 @@ def get_args():
                         help='Filename of the tokens. It should be in data.',
                         dest="filename", 
                         required=True)
+    parser.add_argument('-n', '--name',
+                        help='Filename of Output dictionary.',
+                        dest="name",
+                        required=True)
     parser.add_argument('-s', '--store',
-                        help="Do we store postings?",
+                        help="Do we store postings and dictionaries?",
                         action="store_true",
                         dest="store")
     parser.add_argument('-p', '--preprocess',
@@ -34,17 +38,18 @@ def main():
     if args.preprocess:
         generate_json(tokenize_CSV())
 
-    inverted = InvertedIndex(filename=args.filename,
+    inverted = InvertedIndex(name=args.name,
+                             filename=args.filename,
                              types=['author', 'ingredients', 'method', 'programme', 'recipe_name'],
                              debug=args.debug)
 
     inverted.obtain_tokens()
     inverted.sort_tokens()
     inverted.create_dictionary()
-    inverted.create_postings()
-    
+
     if args.store:
         inverted.store_postings()
+        inverted.store_dictionary()
 
     postings = inverted.get_postings()
 
@@ -53,14 +58,24 @@ def main():
     for k, v in postings.items():
         if i < 200:
             print(k, v)
+            print(inverted.retrieve_posting('data/postings/' + k))
             i += 1
 
     dictionary = inverted.get_dictionary()
-    print(dictionary.most_common(10))
     i = 0
 
     for k, v in dictionary.items():
-        if i < 200:
+        if i < 10:
+            print(k, v)
+            i += 1
+    inverted.load_dictionary('data/dictionaries/recipes.json')
+
+    dict2 = inverted.get_dictionary()
+
+    i = 0
+
+    for k, v in dict2.items():
+        if i < 10:
             print(k, v)
             i += 1
 
