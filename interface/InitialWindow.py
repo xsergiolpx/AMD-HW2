@@ -5,19 +5,23 @@ from interface import SearchWindow
 
 class InitialWindow:
     main_window = None
+    search_entry = None
 
     def __init__(self, root):
         self.main_window = root
         self.create_initial_window()
 
     def search_event(self, event):
-        query = event.widget.get()
-        results = search(query)
+        query = self.search_entry.get()
+        if query.strip() != "":
+            results = search(query)
+            self.create_search_window(query, results)
 
+    def create_search_window(self, query, results):
         root = Tk()
-        root.geometry("410x150")
+        root.geometry("410x400")
         root.wm_title("Recipes Search")
-        SearchWindow.SearchWindow(root, results)
+        SearchWindow.SearchWindow(root, query, results)
         self.main_window.destroy()
         root.mainloop()
 
@@ -32,6 +36,11 @@ class InitialWindow:
         search_entry = Entry(self.main_window, textvariable=sv, width=50)
         search_entry.grid(row=2, columnspan=4)
         search_entry.bind('<Return>', self.search_event)
+        self.search_entry = search_entry
+
+        go_button = Button(self.main_window, text="Go!")
+        go_button.bind('<Button-1>', self.search_event)
+        go_button.grid(row=2, column=4)
 
 
 def search(query):
@@ -53,11 +62,12 @@ def search(query):
              "saturated_fat": "3",
              "fiber": "2",
              "salt": "0.5"
-             }]
+             }, {"recipe_name": "soup"}, {"recipe_name": "soup2"}, {"recipe_name": "soup3"}, {"recipe_name": "soup4"}
+        , {"recipe_name": "soup5"}, {"recipe_name": "soup6"}, {"recipe_name": "soup7"}]
 
 if __name__ == "__main__":
     root = Tk()
-    root.geometry("410x150")
+    root.geometry("460x150")
     root.wm_title("Recipes Search")
     iw = InitialWindow(root)
     root.mainloop()
