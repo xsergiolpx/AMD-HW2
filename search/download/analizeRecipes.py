@@ -3,9 +3,9 @@ import time
 import requests
 from bs4 import BeautifulSoup
 
-from search.download.manageFiles import apendToFile
-from search.download.manageFiles import loadFromFile
-from search.download.manageFiles import saveToTSF
+from search.download.manageFiles import append_to_file
+from search.download.manageFiles import load_from_file
+from search.download.manageFiles import save_to_tsv
 
 # TODO: This should be a script
 
@@ -16,10 +16,10 @@ file="data"
 visitedRecipes = "data/retrieveData/visitedRecipes"
 
 # list of links of the recipes to examine
-links = loadFromFile("data/retrieveData/recipes")
+links = load_from_file("data/retrieveData/recipes")
 
 # load list of already analized links from previous runs if any
-analizedLinks = loadFromFile(visitedRecipes)
+analizedLinks = load_from_file(visitedRecipes)
 
 # counter of the analized recipes
 counter = len(analizedLinks)
@@ -145,9 +145,9 @@ for link in links:
                         header[field] = header[field].replace("\n", " ").replace("\t", " ").replace("\r", " ")
 
                 # Append current header to the file
-                saveToTSF(header, file)
+                save_to_tsv(header, file)
                 # Append the visited link ot a file
-                apendToFile(link, visitedRecipes)
+                append_to_file(link, visitedRecipes)
             except IndexError:
                 # no connection!! retry in 3 seconds
                 time.sleep(3)

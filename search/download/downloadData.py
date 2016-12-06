@@ -3,8 +3,8 @@ from string import ascii_lowercase
 import requests
 from bs4 import BeautifulSoup
 
-from search.download.manageFiles import loadFromFile
-from search.download.manageFiles import saveToFile
+from search.download.manageFiles import load_from_file
+from search.download.manageFiles import save_to_file
 
 # TODO: This should be a script
 
@@ -36,11 +36,11 @@ del tmp
 recipes = set()
 
 # Load visited links from previous runs if any
-visitedLinks = loadFromFile("data/retrieveData/visitedLinks")
+visitedLinks = load_from_file("data/retrieveData/visitedLinks")
 # Load the links of the recipes found in previous runs if any
-recipes = set(loadFromFile("data/retrieveData/recipes"))
+recipes = set(load_from_file("data/retrieveData/recipes"))
 # Store the links of the type /search? here because the process to get recipe links here is different
-searchMore = loadFromFile("data/retrieveData/searchMore")
+searchMore = load_from_file("data/retrieveData/searchMore")
 # how many ingredients URL have we visited so far
 counter = len(visitedLinks)
 
@@ -66,9 +66,9 @@ for link in ingredientsURL:
         recipes = recipes.union(set(lis))
 
         # Save the recipes links to a file
-        saveToFile(sorted(recipes), "data/retrieveData/recipes")
-        saveToFile(sorted(visitedLinks), "data/retrieveData/visitedLinks")
-        saveToFile(set(searchMore), "data/retrieveData/searchMore")
+        save_to_file(sorted(recipes), "data/retrieveData/recipes")
+        save_to_file(sorted(visitedLinks), "data/retrieveData/visitedLinks")
+        save_to_file(set(searchMore), "data/retrieveData/searchMore")
         # time.sleep(0.5)
 
 # Now we have to search in urls like /food/recipes/search?keywords=rice
@@ -99,12 +99,12 @@ for search in searchMore:
                 lis.append("http://www.bbc.co.uk" + i.find_all("a")[0]["href"])
                 recipes = recipes.union(set(lis))
             print(len(recipes), "of", totalRecipes, "### Retrieving page -->", counterPage, "of", maxPage, searchI)
-            saveToFile(sorted(recipes), "data/retrieveData/recipes")
+            save_to_file(sorted(recipes), "data/retrieveData/recipes")
             if len(recipes) >= totalRecipes:
                 visitedLinks.append(search)
                 break
         visitedLinks.append(search)
-        saveToFile(sorted(visitedLinks), "data/retrieveData/visitedLinks")
+        save_to_file(sorted(visitedLinks), "data/retrieveData/visitedLinks")
         if len(recipes) >= totalRecipes:
             break
     if len(recipes) >= totalRecipes:

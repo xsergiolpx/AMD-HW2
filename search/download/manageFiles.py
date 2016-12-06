@@ -1,8 +1,9 @@
 import os
-
+import json
 # TODO: PEP names
 
-def loadFromFile(filename):
+
+def load_from_file(filename):
     """
     Loads filename. If it does not exist, it is created.
     :param filename: filename to load without extension
@@ -20,7 +21,8 @@ def loadFromFile(filename):
                 array.append(line.strip('\n'))
     return array
 
-def saveToFile(iter, filename):
+
+def save_to_file(iter, filename):
     """
     :param iterable: save this iterable to the file. Each element in a new line
     :param filename: filename
@@ -29,7 +31,8 @@ def saveToFile(iter, filename):
     with open(filename + '.txt', 'w') as f:
         f.write('\n'.join(iter))
 
-def apendToFile(s, filename):
+
+def append_to_file(s, filename):
     """
     appends to a new line the string s to the file filename.txt
     :param s: this is a string
@@ -41,7 +44,7 @@ def apendToFile(s, filename):
         f.write("\n")
 
 
-def saveToTSF(header, filename):
+def save_to_tsv(header, filename):
     """
     Apends the list "header" to the file filename.txt.
     This is a tsv, so each element of the list is
@@ -53,3 +56,26 @@ def saveToTSF(header, filename):
     with open(filename + ".tsv", "a") as f:
         f.write("\t".join(header))
         f.write("\n")
+
+
+def read_from_tsv(filename):
+    try:
+        with open(filename + ".tsv", "r") as f:
+            return list(map(int, f.readline().split('\t')))
+    except FileNotFoundError:
+        return []
+
+
+def read_json(filename):
+    """
+    Load json file.
+    :param filename: Path to the json file.
+    :return: The json with the data.
+    """
+    with open(filename) as json_data:
+        return json.load(json_data)
+
+
+def write_json(filename, data):
+    with open(filename, 'w') as json_file:
+        json.dump(data, json_file)
