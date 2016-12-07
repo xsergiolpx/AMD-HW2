@@ -7,10 +7,22 @@ from search.download.manageFiles import append_to_file
 from search.download.manageFiles import load_from_file
 from search.download.manageFiles import save_to_tsv
 
+def isFloat(number):
+    '''
+    Checks if the number is floatable
+    :param number: parameter to check
+    :return: True if is float, False if is not
+    '''
+    try:
+        float(number)
+        return True
+    except ValueError:
+        return False
+
 # TODO: This should be a script
 
 # filename to write the data
-file="data"
+file="data/data"
 
 # filename to save the visited recipes to save on the fly
 visitedRecipes = "data/retrieveData/visitedRecipes"
@@ -121,15 +133,18 @@ for link in links:
                 header.append(str("/vegetarian" in str(soup)))
 
                 # Nutritional content
-                measure = ["kcal,", "protein,", "carbohydrate", "sugars),", "fat", "saturates),", "fibre", "salt"]
+                measure = ["kcal,", "protein,", "carbohydrate", "sugars)", "fat", "saturates),", "fibre", "salt"]
                 # Paragrapth where all the information is contained
                 try:
                     #the replace avoids problems parsnig the data
-                    nutrition = information.find_all(itemprop="description")[0].contents[-1].replace("kcal"," kcal").replace("salt.","t").split()
+                    nutrition = information.find_all(itemprop="description")[0].contents[-1].replace("sugars),","sugars)").replace("kcal"," kcal").replace("salt.","t").replace("carbohydrates","carbohydrate").split()
+                    #print(nutrition[-9:])
                     for element in measure:
                         if element in nutrition:
                             ind = nutrition.index(element)
-                            header.append(nutrition[ind - 1].strip("g"))
+                            mass = nutrition[ind - 1].strip("g")
+                            if isFloat(mass) == True:
+                                header.append(mass)
                         else:
                             header.append("NaN")
                 except IndexError:
@@ -149,6 +164,7 @@ for link in links:
                 save_to_tsv(header, file)
                 # Append the visited link ot a file
                 append_to_file(link, visitedRecipes)
+                #print(header[-9:])
             except IndexError:
                 # no connection!! retry in 3 seconds
                 time.sleep(3)
