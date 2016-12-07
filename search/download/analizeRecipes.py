@@ -124,7 +124,8 @@ for link in links:
                 measure = ["kcal,", "protein,", "carbohydrate", "sugars),", "fat", "saturates),", "fibre", "salt"]
                 # Paragrapth where all the information is contained
                 try:
-                    nutrition = information.find_all(itemprop="description")[0].contents[-1].split()
+                    #the replace avoids problems parsnig the data
+                    nutrition = information.find_all(itemprop="description")[0].contents[-1].replace("kcal"," kcal").replace("salt.","t").split()
                     for element in measure:
                         if element in nutrition:
                             ind = nutrition.index(element)
