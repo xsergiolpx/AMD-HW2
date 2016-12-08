@@ -79,3 +79,9 @@ def read_json(filename):
 def write_json(filename, data):
     with open(filename, 'w') as json_file:
         json.dump(data, json_file)
+
+def delete_file(filename):
+    try:
+        os.remove(filename)
+    except FileNotFoundError:
+        pass
