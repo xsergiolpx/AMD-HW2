@@ -142,7 +142,6 @@ def analizeRecipes(reset = False):
                     try:
                         #the replace avoids problems parsnig the data
                         nutrition = information.find_all(itemprop="description")[0].contents[-1].replace("sugars),","sugars)").replace("kcal"," kcal").replace("salt.","t").replace("carbohydrates","carbohydrate").split()
-                        #print(nutrition[-9:])
                         for element in measure:
                             if element in nutrition:
                                 ind = nutrition.index(element)
@@ -168,11 +167,11 @@ def analizeRecipes(reset = False):
                     save_to_tsv(header, file)
                     # Append the visited link ot a file
                     append_to_file(link, visitedRecipes)
-                    #print(header[-9:])
+                    #Recipe downloaded, go to the next oen
                     break
                 except IndexError:
                     # no connection!! retry in 5 seconds
-                    print(retry, "of", 5 ,"No connection, retry in 5 seconds")
+                    print(" tries. No connection, retry in 5 seconds. Tries [", retry + 1, "of", 5, "]")
                     retry += 1
                     time.sleep(5)
                     counter -= 1
