@@ -41,7 +41,8 @@ def analizeRecipes(reset = False):
 
     for link in links:
         if link not in analizedLinks:
-            while True:
+            retry = 0
+            while retry < 5:
                 # try to get the connection, if fails, wait 5 seconds and retry
                 try:
                     counter += 1
@@ -170,7 +171,8 @@ def analizeRecipes(reset = False):
                     #print(header[-9:])
                     break
                 except IndexError:
-                    # no connection!! retry in 3 seconds
-                    print("No connection, retry in 5 seconds")
+                    # no connection!! retry in 5 seconds
+                    print(retry, "of", 5 ,"No connection, retry in 5 seconds")
+                    retry += 1
                     time.sleep(5)
                     counter -= 1
