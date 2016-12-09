@@ -180,7 +180,6 @@ class InvertedIndex(object):
             # Return n elements with tolerance at most k
             for k, c in dropwhile(lambda c: c[1] <= k, reversed(distances.most_common())):
                 del distances[k]
-
             return distances.most_common()
         else:
             # Return k elements with the lowest score
