@@ -141,7 +141,7 @@ def analizeRecipes(reset = False):
                     # Paragrapth where all the information is contained
                     try:
                         #the replace avoids problems parsnig the data
-                        nutrition = information.find_all(itemprop="description")[0].contents[-1].replace("sugars),","sugars)").replace("kcal"," kcal").replace("salt.","t").replace("carbohydrates","carbohydrate").split()
+                        nutrition = information.find_all(itemprop="description")[0].contents[-1].replace("sugars),","sugars)").replace("kcal"," kcal").replace("salt.","salt").replace("carbohydrates","carbohydrate").split()
                         for element in measure:
                             if element in nutrition:
                                 ind = nutrition.index(element)
