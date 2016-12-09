@@ -1,5 +1,4 @@
 from search.indexing.inverted_index import InvertedIndex
-import argparse
 import time
 from collections import deque
 
