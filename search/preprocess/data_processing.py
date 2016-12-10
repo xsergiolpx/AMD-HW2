@@ -2,12 +2,15 @@ import pandas as pd
 from nltk import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
+from collections import Counter
+from search.download.manageFiles import save_to_tsv
+from math import sqrt
 import string
 import re
 import sys
 
 
-def tokenize(text):
+def clean_string(text, stemming=True):
     """
     Receives a text, which could be a single word or a sentence, and applies the natural language
     process (using NLTK library) in the text, normalizing, tokenizing, removing stopwords and punctuations,
@@ -29,7 +32,7 @@ def tokenize(text):
     text = re.sub(r"/", ' ', text)
 
     # Delete fractions
-    fractions = ['̶', '½', '¾', '¼', '⅓', '⅙', '⅛', '⅔', '⅝','⅜','—','–','‘','”','…','.','`','’', '“']
+    fractions = ['̶', '½', '¾', '¼', '⅓', '⅙', '⅛', '⅔', '⅝', '⅜', '—', '–', '‘', '”', '…', '.', '`', '’', '“']
     text = re.sub(('[' + ','.join(map(lambda x: str(x), fractions)) + ']'), '', text)
 
     # creates the tokens
@@ -38,21 +41,35 @@ def tokenize(text):
     # excludes tokens which contain numbers and punctuations
     text = [t for t in text if bool(re.search(r'\d', t)) == False and t not in string.punctuation]
 
-    # removes the stopwords and punctuations
-    text = [ps.stem(t) for t in text]
+    # Stemming
+    if stemming:
+        text = [ps.stem(t) for t in text]
 
-    # stems the content
+    # Remove stopwords
     text = [t for t in text if not t in stopset]
 
     # remove the strange character ' appearing before some words
     text = [re.sub('[\'\"]', '', t) for t in text]
-
     # remove the duplicates before returning the tokens
+    return text
+
+
+def tokenize(text):
     return list(set(text))
 
 
-def tokenize_CSV(filename='data/data.tsv',
-                 columns=["recipe_name", "author", "programme", "method", "ingredients", "vegetarian"]):
+def update_frequencies(counter, index):
+    sum = 0
+    for x, v in counter.items():
+        sum += v*v
+        save_to_tsv([str(index), str(v)], filename='data/term_frequencies/' + x)
+    return sqrt(sum)
+
+
+def tokenize_csv(filename='data/data.tsv',
+                 columns=["recipe_name", "author", "programme", "method", "ingredients"],
+                 stemming=[],
+                 term_frequencies=True):
     """
     It receives a CSV file in FILENAME containing the recipes in each row and tab-separated. It applies the
     function 'tokenize' in each cell of COLUMNS of the CSV file. It returns a Pandas dataframe.
@@ -67,18 +84,42 @@ def tokenize_CSV(filename='data/data.tsv',
     df_recipes = pd.read_csv(filename, delimiter="\t", names=names, usecols=columns)
 
     # Iterates over each row of the recipes dataframe, getting the row and the row number (index)
+    N = df_recipes.shape[0]
+    with open("data/documents.csv", 'w') as file_t:
+        file_t.write(str(N))
 
-    times = 0
+    length_file = open("data/length.tsv", "a")
+
     for index, row in df_recipes.iterrows():
-        if times % 100 == 0:
-            print("[preprocessing] %0.2f%s documents processed"%(100*times/12000,'%'))
+        if term_frequencies:
+            counter = Counter()
+
+        if index % 100 == 0:
+            print("[preprocessing] %0.2f%s processed (%d of %d)"%(100*index/N,'%', index+1, N))
             sys.stdout.flush()
-        times += 1
+
         # Reads each column name in COLUMNS
         for column in columns:
             # Accesses each cell by the row number and the column name and apply the function tokenize on the cell,
             # changing the value of it by the list of tokens
-            df_recipes.set_value(index,column, tokenize(row[column]))
+
+            if str(row[column]) == 'nan':
+                row[column] = ""
+
+            # Use column name inside stemming vector if you dont want stemming in that column
+            # raw_row = clean_string(row[column], stemming=False) if column in stemming else clean_string(row[column])
+            raw_row = clean_string(row[column])
+
+            if term_frequencies:
+                counter.update(raw_row)
+
+            df_recipes.set_value(index, column, list(set(raw_row)))
+
+        if term_frequencies:
+            length_file.write("\t".join([str(index), str(update_frequencies(counter, index))]))
+            length_file.write("\n")
+    length_file.close()
+
     return df_recipes
 
 
