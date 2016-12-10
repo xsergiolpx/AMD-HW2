@@ -1,4 +1,5 @@
 from search.indexing.inverted_index import InvertedIndex
+from search.preprocess.data_processing import clean_string, tokenize
 import pprint
 
 
@@ -13,9 +14,11 @@ def main():
     inverted.load_dictionary("data/dictionaries/recipes.json")
 
     # Get postings
-    entry = "garlic chicken salt pepper onion oliv oil vegetables"
+    entry = "nutella pancake"
 
-    for doc, score in inverted.cosine_score(entry):
+    query = tokenize(clean_string(entry))
+
+    for doc, score in inverted.cosine_score(query):
         print(doc, score)
 
         # salt, garlic, onion, pepper
