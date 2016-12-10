@@ -3,10 +3,11 @@ from collections import defaultdict, Counter
 from search.download.manageFiles import save_to_tsv, read_json, write_json, read_from_tsv
 from collections import deque, Counter
 from itertools import dropwhile
-from math import sqrt, log10
+from math import sqrt, log10, ceil
 
 # TODO: Add fancy print
 # TODO: Change filename to: tokens_file, dictionary_file
+
 
 class InvertedIndex(object):
 
@@ -200,11 +201,13 @@ class InvertedIndex(object):
         :param type: The type of k_near we want.
         :return: The list depending on type.
         """
+        k = ceil((len(string))*0.2)
+
         distances = Counter()
         for doc in self.dictionary.keys():
             if doc == '':
                 continue
-            if doc[0] == string[0]:
+            if doc[0] == string[0] and doc[-1] == string[-1]:
                 distances[doc] = self.distance(string, doc)
 
         if type == "tolerance":
@@ -258,7 +261,7 @@ class InvertedIndex(object):
 
     def cosine_score(self, q):
         # Get the terms of the query
-        query = q.split()
+        query = q
 
         # Get posting list given query
         documents = self.intersection_list(query, 5)
@@ -277,6 +280,8 @@ class InvertedIndex(object):
                 terms += union
             else:
                 terms += [term]
+
+        print(terms)
 
         # Calculate w_t,q
         wt_q = 1.0/sqrt(len(terms))
