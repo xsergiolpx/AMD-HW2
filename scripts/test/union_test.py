@@ -19,11 +19,11 @@ def main():
     union = " ".join(k for k, v in inverted.k_near_string("vegetables", 5))
 
     print("[union] Print postings")
-    for posting in map(lambda x: inverted.retrieve_posting(posting=dictionary[x]["posting"]), union.split(" ")):
+    for posting in map(lambda x: inverted.load_posting(posting=dictionary[x]["posting"]), union.split(" ")):
         print(posting)
 
     print("[union] Print union")
-    union = inverted.union(map(lambda x: inverted.retrieve_posting(posting=dictionary[x]["posting"]), union.split(" ")))
+    union = inverted.union(map(lambda x: inverted.load_posting(posting=dictionary[x]["posting"]), union.split(" ")))
     print(union)
     print("[union] len(union)=", len(union))
 

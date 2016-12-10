@@ -44,8 +44,8 @@ def main():
     dictionary = inverted.get_dictionary()
 
     # Get postings
-    posting1 = inverted.retrieve_posting(posting=dictionary[args.p1]["posting"])
-    posting2 = inverted.retrieve_posting(posting=dictionary[args.p2]["posting"])
+    posting1 = inverted.load_posting(posting=dictionary[args.p1]["posting"])
+    posting2 = inverted.load_posting(posting=dictionary[args.p2]["posting"])
 
     if args.debug:
         # Print intersection
