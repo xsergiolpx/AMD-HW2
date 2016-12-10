@@ -58,10 +58,18 @@ def save_to_tsv(header, filename):
         f.write("\n")
 
 
-def read_from_tsv(filename):
+def read_from_tsv(filename, lines=False):
     try:
-        with open(filename + ".tsv", "r") as f:
-            return list(map(int, f.readline().split('\t')))
+        if not lines:
+            with open(filename + ".tsv", "r") as f:
+                return list(map(int, f.readline().split('\t')))
+        else:
+            structure = {}
+            with open(filename + ".tsv", "r") as f:
+                for line in f:
+                    k, v = line.split('\t')
+                    structure[int(k)] = int(v)
+                return structure
     except FileNotFoundError:
         return []
 
