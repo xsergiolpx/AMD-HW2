@@ -173,7 +173,7 @@ def analizeRecipes(reset = False):
                     break
                 except IndexError:
                     # no connection!! retry in 5 seconds
-                    print(" tries. No connection, retry in 5 seconds. Tries [", retry + 1, "of", 3, "]")
+                    print("No connection, retry in 5 seconds. Tries [", retry + 1, "of", 3, "]")
                     retry += 1
                     time.sleep(5)
                     counter -= 1
