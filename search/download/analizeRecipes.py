@@ -178,4 +178,4 @@ def analizeRecipes(reset = False):
                     time.sleep(5)
                     counter -= 1
 
-analizeRecipes(False)
+#analizeRecipes(False)
