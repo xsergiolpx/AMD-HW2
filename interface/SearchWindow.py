@@ -1,4 +1,5 @@
 from tkinter import *
+from search.controller.search_controller import retrieve_recipes
 from interface import RecipeWindow
 
 
@@ -8,24 +9,26 @@ class SearchWindow:
     query = None
     results = None
     selected = None
+    inverted = None
 
-    def __init__(self, previous_window, query, results):
+    def __init__(self, previous_window, query, results, inverted):
         self.previous_window = previous_window
         self.results = results
         self.query = query
+        self.inverted = inverted
         self.make_search_window()
 
     def search_event(self, event):
         query = self.search_entry.get()
         if query.strip() != "":
-            results = search(query)
+            results = retrieve_recipes(self.inverted, query)
             self.create_search_window(query, results)
 
     def create_search_window(self, query, results):
         root = Tk()
         root.geometry("410x400")
         root.wm_title("Recipes Search")
-        SearchWindow(root, query, results)
+        SearchWindow(root, query, results, self.inverted)
         self.previous_window.destroy()
         root.mainloop()
 
@@ -37,6 +40,7 @@ class SearchWindow:
 
     def create_recipe_window(self, event):
         root = Tk()
+        root.geometry("350x700")
         root.wm_title("Recipes Search")
         if self.selected is None:
             self.selected = self.results[0]
@@ -88,26 +92,3 @@ class SearchWindow:
         ok_button = Button(search_frame, text="OK")
         ok_button.pack()
         ok_button.bind('<Button-1>', self.create_recipe_window)
-
-
-def search(query):
-    return [{"recipe_name": "soup",
-             "author": "eu",
-             "programme": "ana maria",
-             "prep_time": "10",
-             "cooking_time": "9",
-             "serves": "1",
-             "pic_url": "/home/gabriel/Documents/1_Semester/ADM/HW2/interface/recipe.gif",
-             "method": "Put the dried mushrooms in a large, heavy-based saucepan and cover with the water.",
-             "ingredients": "15g/½oz dried wild mushrooms, such as porcini\n1.4 litres/2½ pints just-boiled water",
-             "vegetarian": "V",
-             "calories": "55",
-             "protein": "10",
-             "carbs": "12",
-             "sugars": "9",
-             "total_fat": "7",
-             "saturated_fat": "3",
-             "fiber": "2",
-             "salt": "0.5"
-             }, {"recipe_name": "soup"}, {"recipe_name": "ba2"}, {"recipe_name": "ba3"}, {"recipe_name": "ba4"}
-        , {"recipe_name": "asds"}, {"recipe_name": "sdfs"}, {"recipe_name": "ghf"}]

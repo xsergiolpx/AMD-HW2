@@ -81,7 +81,7 @@ def tokenize_csv(filename='data/data.tsv',
     names = ["recipe_name", "author", "programme", "prep_time", "cooking_time", "serves", "pic_url",
               "method", "ingredients", "vegetarian", "calories", "protein", "carbs", "sugars",
               "total_fat", "saturated_fat", "fiber", "salt", "link"]
-    df_recipes = pd.read_csv(filename, delimiter="\t", names=names, usecols=columns)
+    df_recipes = pd.read_csv(filename, delimiter="\t", names=names)
 
     # Iterates over each row of the recipes dataframe, getting the row and the row number (index)
     N = df_recipes.shape[0]
@@ -91,6 +91,7 @@ def tokenize_csv(filename='data/data.tsv',
     length_file = open("data/length.tsv", "a")
 
     for index, row in df_recipes.iterrows():
+        create_recipe_json(row, index)
         if term_frequencies:
             counter = Counter()
 
@@ -142,3 +143,7 @@ def generate_json(df_recipes):
     :return:
     """
     df_recipes.to_json("data/tokens.json", orient="index", force_ascii=False)
+
+
+def create_recipe_json(recipe, index):
+    recipe.to_json("data/recipes/" + str(index) + ".json", orient="index", force_ascii=False)

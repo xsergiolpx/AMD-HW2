@@ -1,27 +1,29 @@
 from tkinter import *
 from interface import SearchWindow
-#from search.indexing.inverted_index import search
+from search.controller.search_controller import retrieve_recipes
 
 
 class InitialWindow:
     main_window = None
     search_entry = None
+    inverted = None
 
-    def __init__(self, root):
+    def __init__(self, root, inverted):
         self.main_window = root
         self.create_initial_window()
+        self.inverted = inverted
 
     def search_event(self, event):
         query = self.search_entry.get()
         if query.strip() != "":
-            results = search(query)
+            results = retrieve_recipes(self.inverted, query)
             self.create_search_window(query, results)
 
     def create_search_window(self, query, results):
         root = Tk()
         root.geometry("410x400")
         root.wm_title("Recipes Search")
-        SearchWindow.SearchWindow(root, query, results)
+        SearchWindow.SearchWindow(root, query, results, self.inverted)
         self.main_window.destroy()
         root.mainloop()
 
@@ -41,33 +43,3 @@ class InitialWindow:
         go_button = Button(self.main_window, text="Go!")
         go_button.bind('<Button-1>', self.search_event)
         go_button.grid(row=2, column=4)
-
-
-def search(query):
-    return [{"recipe_name": "soup",
-             "author": "eu",
-             "programme": "ana maria",
-             "prep_time": "10",
-             "cooking_time": "9",
-             "serves": "1",
-             "pic_url": "/home/gabriel/Documents/1_Semester/ADM/HW2/interface/recipe.gif",
-             "method": "Put the dried mushrooms in a large, heavy-based saucepan and cover with the water.",
-             "ingredients": "15g/½oz dried wild mushrooms, such as porcini\n1.4 litres/2½ pints just-boiled water",
-             "vegetarian": "V",
-             "calories": "55",
-             "protein": "10",
-             "carbs": "12",
-             "sugars": "9",
-             "total_fat": "7",
-             "saturated_fat": "3",
-             "fiber": "2",
-             "salt": "0.5"
-             }, {"recipe_name": "soup"}, {"recipe_name": "soup2"}, {"recipe_name": "soup3"}, {"recipe_name": "soup4"}
-        , {"recipe_name": "soup5"}, {"recipe_name": "soup6"}, {"recipe_name": "soup7"}]
-
-if __name__ == "__main__":
-    root = Tk()
-    root.geometry("460x150")
-    root.wm_title("Recipes Search")
-    iw = InitialWindow(root)
-    root.mainloop()
