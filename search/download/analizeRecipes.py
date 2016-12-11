@@ -137,11 +137,11 @@ def analizeRecipes(reset = False):
                     header.append(str("/vegetarian" in str(soup)))
 
                     # Nutritional content
-                    measure = ["kcal,", "protein,", "carbohydrate", "suars", "fat", "saturates,", "fibre", "salt"]
+                    measure = ["kcal", "protein,", "carbohydrate", "suars", "fat", "saturates,", "fibre", "salt"]
                     # Paragrapth where all the information is contained
                     try:
                         #the replace avoids problems parsnig the data
-                        nutrition = information.find_all(itemprop="description")[0].contents[-1].replace(",","").replace(")","").replace("(","").replace("kcal"," kcal").replace("salt.","salt").replace("carbohydrates","carbohydrate").replace("g","").replace(" ","").split()
+                        nutrition = information.find_all(itemprop="description")[0].contents[-1].replace(",","").replace(")","").replace("(","").replace("kcal"," kcal ").replace("salt.","salt").replace("carbohydrates","carbohydrate").replace("g","").split()
                         for element in measure:
                             if element in nutrition and element is not " ":
                                 ind = nutrition.index(element)
