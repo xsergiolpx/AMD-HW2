@@ -42,7 +42,7 @@ def analizeRecipes(reset = False):
     for link in links:
         if link not in analizedLinks:
             retry = 0
-            while retry < 5:
+            while retry < 3:
                 # try to get the connection, if fails, wait 5 seconds and retry
                 try:
                     counter += 1
@@ -137,17 +137,19 @@ def analizeRecipes(reset = False):
                     header.append(str("/vegetarian" in str(soup)))
 
                     # Nutritional content
-                    measure = ["kcal,", "protein,", "carbohydrate", "sugars)", "fat", "saturates),", "fibre", "salt"]
+                    measure = ["kcal,", "protein,", "carbohydrate", "suars", "fat", "saturates,", "fibre", "salt"]
                     # Paragrapth where all the information is contained
                     try:
                         #the replace avoids problems parsnig the data
-                        nutrition = information.find_all(itemprop="description")[0].contents[-1].replace("sugars),","sugars)").replace("kcal"," kcal").replace("salt.","salt").replace("carbohydrates","carbohydrate").split()
+                        nutrition = information.find_all(itemprop="description")[0].contents[-1].replace(",","").replace(")","").replace("(","").replace("kcal"," kcal").replace("salt.","salt").replace("carbohydrates","carbohydrate").replace("g","").replace(" ","").split()
                         for element in measure:
-                            if element in nutrition:
+                            if element in nutrition and element is not " ":
                                 ind = nutrition.index(element)
-                                mass = nutrition[ind - 1].strip("g")
+                                mass = nutrition[ind - 1]
                                 if isFloat(mass) == True:
                                     header.append(mass)
+                                else:
+                                    header.append("NaN")
                             else:
                                 header.append("NaN")
                     except IndexError:
@@ -171,7 +173,7 @@ def analizeRecipes(reset = False):
                     break
                 except IndexError:
                     # no connection!! retry in 5 seconds
-                    print(" tries. No connection, retry in 5 seconds. Tries [", retry + 1, "of", 5, "]")
+                    print(" tries. No connection, retry in 5 seconds. Tries [", retry + 1, "of", 3, "]")
                     retry += 1
                     time.sleep(5)
                     counter -= 1
