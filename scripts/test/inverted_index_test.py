@@ -1,5 +1,5 @@
 from search.indexing.inverted_index import InvertedIndex
-from search.preprocess.data_processing import generate_json, tokenize_CSV
+from search.preprocess.data_processing import generate_json, tokenize_csv
 import argparse
 
 # TODO: Find out how to pass a vector to argparse for types
@@ -23,6 +23,10 @@ def get_args():
                         help="Use preprocessing to create tokens.json?",
                         action="store_true",
                         dest="preprocess")
+    parser.add_argument('-t', '--term_frequencies',
+                        help="Generate term frequencies",
+                        action="store_true",
+                        dest="term_frequencies")
     parser.add_argument('-d', '--debug',
                         help="Debug is passed.",
                         action="store_true",
@@ -35,13 +39,13 @@ def get_args():
 def main():
     args, parser = get_args()
 
-    if args.preprocess:
-        generate_json(tokenize_CSV())
-
     inverted = InvertedIndex(name=args.name,
                              filename=args.filename,
                              types=['author', 'ingredients', 'method', 'programme', 'recipe_name'],
                              debug=args.debug)
+
+    if args.preprocess:
+        generate_json(tokenize_csv(term_frequencies=args.term_frequencies))
 
     inverted.obtain_tokens()
     inverted.sort_tokens()
@@ -58,7 +62,7 @@ def main():
     for k, v in postings.items():
         if i < 200:
             print(k, v)
-            print(inverted.retrieve_posting('data/postings/' + k))
+            print(inverted.load_posting('data/postings/' + k))
             i += 1
 
     dictionary = inverted.get_dictionary()
@@ -68,7 +72,6 @@ def main():
         if i < 10:
             print(k, v)
             i += 1
-    inverted.load_dictionary('data/dictionaries/recipes.json')
 
     dict2 = inverted.get_dictionary()
 
@@ -78,7 +81,6 @@ def main():
         if i < 10:
             print(k, v)
             i += 1
-
 
 if __name__ == '__main__':
     main()
