@@ -137,7 +137,7 @@ def analizeRecipes(reset = False):
                     header.append(str("/vegetarian" in str(soup)))
 
                     # Nutritional content
-                    measure = ["kcal", "protein,", "carbohydrate", "suars", "fat", "saturates,", "fibre", "salt"]
+                    measure = ["kcal", "protein", "carbohydrate", "suars", "fat", "saturates", "fibre", "salt"]
                     # Paragrapth where all the information is contained
                     try:
                         #the replace avoids problems parsnig the data
@@ -164,7 +164,7 @@ def analizeRecipes(reset = False):
                             header[field] = "NaN"
                         if "\t" in header[field] or "\n" in header[field] or "\r" in header[field]:
                             header[field] = header[field].replace("\n", " ").replace("\t", " ").replace("\r", " ")
-
+                    #print(header[10:])
                     # Append current header to the file
                     save_to_tsv(header, file)
                     # Append the visited link ot a file
@@ -177,3 +177,5 @@ def analizeRecipes(reset = False):
                     retry += 1
                     time.sleep(5)
                     counter -= 1
+
+analizeRecipes(False)
